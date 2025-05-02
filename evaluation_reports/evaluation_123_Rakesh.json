@@ -1,0 +1,42 @@
+{
+    "name": "Rakesh",
+    "roll_number": "123",
+    "course": "Btech",
+    "section": "123",
+    "submission_time": "2025-05-02 11:23:07",
+    "total_score": 36,
+    "max_score": 50,
+    "percentage": 72.0,
+    "evaluations": [
+        {
+            "question": "What is artificial Intelligence?",
+            "student_answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans",
+            "score_out_of_10": 9,
+            "feedback": "Good definition, but lacks conciseness and specific examples."
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "student_answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans",
+            "score_out_of_10": 9,
+            "feedback": "Good definition, but lacks a brief explanation or example."
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "student_answer": "Artificial intelligence is the ability of a computer or computer-controlled",
+            "score_out_of_10": 4,
+            "feedback": "Incomplete definition, lacks specificity and clarity."
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "student_answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans",
+            "score_out_of_10": 8,
+            "feedback": "Good definition, but lacks conciseness and specific examples."
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "student_answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks",
+            "score_out_of_10": 6,
+            "feedback": "Incomplete definition, lacks specific examples or details"
+        }
+    ]
+}

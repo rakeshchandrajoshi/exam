@@ -1,0 +1,42 @@
+{
+    "name": "Alok",
+    "roll_number": "1256",
+    "course": "Btech",
+    "section": "6",
+    "submission_time": "2025-05-02 10:28:00",
+    "total_score": 10,
+    "max_score": 50,
+    "percentage": 20.0,
+    "evaluations": [
+        {
+            "question": "Define Artificial Intelligence",
+            "student_answer": "It is a new science which is trending",
+            "score_out_of_10": 2,
+            "feedback": "Vague and inaccurate definition, lacks technical depth"
+        },
+        {
+            "question": "What is Machine Learning?",
+            "student_answer": "It is less than deep learning. Which mimics human mind",
+            "score_out_of_10": 2,
+            "feedback": "Incorrect and vague definition. Machine learning is a subset of AI that involves training algorithms to learn from data."
+        },
+        {
+            "question": "Explain Deep Learning",
+            "student_answer": "It is advanced technique",
+            "score_out_of_10": 2,
+            "feedback": "Very brief and lacks clarity. Deep learning involves neural networks with multiple layers."
+        },
+        {
+            "question": "Applications of AI in daily life",
+            "student_answer": "Very useful",
+            "score_out_of_10": 2,
+            "feedback": "Answer lacks specificity and details. Needs more concrete examples."
+        },
+        {
+            "question": "Difference between Supervised and Unsupervised Learning",
+            "student_answer": "It includes lables while unsupervised do not include lables",
+            "score_out_of_10": 2,
+            "feedback": "Answer lacks clarity and accuracy. Supervised learning uses labeled data for training, while unsupervised learning uses unlabeled data to discover patterns."
+        }
+    ]
+}

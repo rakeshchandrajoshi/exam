@@ -1,0 +1,42 @@
+{
+    "name": "Deepak",
+    "roll_number": "2",
+    "course": "Btech",
+    "section": "6",
+    "submission_time": "2025-04-28 11:12:27",
+    "total_score": 42,
+    "max_score": 50,
+    "percentage": 84.0,
+    "evaluations": [
+        {
+            "question": "Define Artificial Intelligence.",
+            "student_answer": "AI is the simulation of human intelligence by machines, enabling them to perform tasks like learning, reasoning, and problem-solving.",
+            "score_out_of_10": 9,
+            "feedback": "Clear and concise definition, well done! Consider adding a bit more depth for a perfect score."
+        },
+        {
+            "question": "What is Machine Learning?",
+            "student_answer": "ML is a subset of AI that allows machines to learn from data and improve their performance without explicit programming.",
+            "score_out_of_10": 9,
+            "feedback": "Excellent definition, clear and concise. Minor suggestion: consider adding 'automatically' to improve accuracy."
+        },
+        {
+            "question": "Explain Deep Learning.",
+            "student_answer": "Deep Learning is a type of ML that uses neural networks with many layers to analyze complex data, often for tasks like image and speech recognition",
+            "score_out_of_10": 8,
+            "feedback": "Good definition, but lacks specific examples or details on how deep learning models are trained."
+        },
+        {
+            "question": "Applications of AI in daily life.",
+            "student_answer": "AI is used in virtual assistants, recommendation systems (like Netflix), autonomous vehicles, healthcare, and smart devices.",
+            "score_out_of_10": 8,
+            "feedback": "Good overview, but lacks specific examples and depth."
+        },
+        {
+            "question": "5. Difference between Supervised and Unsupervised Learning",
+            "student_answer": "Supervised Learning: Trains models on labeled data to predict outcomes (e.g., classification). Unsupervised Learning: Finds patterns in data without labels (e.g., clustering)",
+            "score_out_of_10": 8,
+            "feedback": "Good basic definitions, but lacks depth and examples for a comprehensive understanding."
+        }
+    ]
+}
