@@ -4,13 +4,14 @@ import json
 from datetime import datetime
 from zipfile import ZipFile
 from io import BytesIO
+import tempfile
 import pandas as pd
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from langchain_groq import ChatGroq
 
-# --- Configuration ---
+# Configuration
 PASSWORD = "Amity@123"
 SUBMISSION_DIR = "student_submissions"
 QUESTION_DIR = "question_paper"
@@ -21,8 +22,9 @@ os.makedirs(SUBMISSION_DIR, exist_ok=True)
 os.makedirs(QUESTION_DIR, exist_ok=True)
 os.makedirs(EVALUATION_DIR, exist_ok=True)
 
-
-# --- Student Submission Page ---
+# -----------------------------
+# Student Submission Page
+# -----------------------------
 def student_submission_page():
     st.title("📚 Student Assignment Submission Portal")
     st.header("📝 Enter Your Details")
@@ -65,20 +67,19 @@ def student_submission_page():
         else:
             st.warning("⚠️ Please fill all your details before submitting.")
 
-
-# --- Evaluator: Set Question Paper ---
+# -----------------------------
+# Set Question Paper (Protected)
+# -----------------------------
 def evaluator_question_paper_page():
     password_input = st.text_input("Enter Password", type="password")
-
     if password_input == PASSWORD:
         st.title("📑 Set Question Paper")
         question_file = os.path.join(QUESTION_DIR, "question_paper.json")
 
+        questions = []
         if os.path.exists(question_file):
             with open(question_file, "r") as f:
                 questions = json.load(f)
-        else:
-            questions = []
 
         st.header("📝 Add Up to 5 Questions")
         inputs = [st.text_area(f"Question {i + 1}", height=100, value=questions[i] if len(questions) > i else "", key=f"q{i}") for i in range(5)]
@@ -91,17 +92,17 @@ def evaluator_question_paper_page():
                 st.success("✅ Question Paper Saved!")
             else:
                 st.warning("⚠️ Please enter at least one question.")
-
-        if new_questions:
-            st.subheader("Current Questions")
-            for i, q in enumerate(new_questions, 1):
-                st.write(f"{i}. {q}")
     else:
-        st.error("❌ Incorrect password. Please try again.")
+        st.error("❌ Incorrect password.")
 
+# -----------------------------
+# AI Evaluation
+# -----------------------------
+import re
 
-# --- AI Evaluation ---
 def evaluate_student_answers(student_data, groq_api_key):
+    from langchain_groq import ChatGroq
+
     responses = student_data.get("responses", [])
     llm = ChatGroq(groq_api_key=groq_api_key, model_name=MODEL_NAME, temperature=0.3)
     evaluation_results = []
@@ -125,16 +126,34 @@ Now evaluate:
 Question: {resp['question']}
 Student's Answer: {resp['answer']}
 """
+
         try:
             result = llm.invoke(prompt)
-            evaluation_json = json.loads(result.content)
+            content = result.content.strip()
+
+            st.write("📤 LLM Raw Response:")
+            st.code(content)
+
+            # Extract only the JSON part
+            json_match = re.search(r"\{.*\}", content, re.DOTALL)
+            if not json_match:
+                raise ValueError("❌ No valid JSON found in LLM response.")
+
+            evaluation_json = json.loads(json_match.group())
+
+            # Validate keys
+            required_keys = ["question", "student_answer", "score_out_of_10", "feedback"]
+            if not all(key in evaluation_json for key in required_keys):
+                raise ValueError("❌ Missing expected keys in LLM response.")
+
             evaluation_results.append(evaluation_json)
+
         except Exception as e:
             evaluation_results.append({
                 "question": resp['question'],
                 "student_answer": resp['answer'],
                 "score_out_of_10": 0,
-                "feedback": f"Error: {str(e)}"
+                "feedback": f"❌ Error parsing LLM response: {str(e)}"
             })
 
     return evaluation_results
@@ -162,15 +181,16 @@ def generate_pdf_report(student_data, evaluations):
     buffer.seek(0)
     return buffer
 
-
-# --- Evaluation Page ---
+# -----------------------------
+# Evaluation Page
+# -----------------------------
 def evaluation_page():
-    st.title("🎯 Evaluator Dashboard - AI Assignment Evaluator")
-    groq_key = st.text_input("Enter Evaluator AI Password", type="password")
+    st.title("🎯 AI Evaluator Dashboard")
+    groq_key = st.text_input("Enter Evaluator Password", type="password")
 
     submission_files = [f for f in os.listdir(SUBMISSION_DIR) if f.endswith(".json")]
-    if len(submission_files) == 0:
-        st.warning("⚠️ No student submissions yet.")
+    if not submission_files:
+        st.warning("⚠️ No student submissions found.")
         return
 
     if st.button("🚀 Start Evaluation"):
@@ -192,11 +212,11 @@ def evaluation_page():
             student_data.update({
                 "total_score": total_score,
                 "max_score": max_score,
-                "percentage": round(percentage, 2)
+                "percentage": round(percentage, 2),
+                "evaluations": evaluations
             })
 
-            report_path = os.path.join(EVALUATION_DIR, f"evaluation_{file}")
-            with open(report_path, "w") as f:
+            with open(os.path.join(EVALUATION_DIR, f"evaluation_{file}"), "w") as f:
                 json.dump(student_data, f, indent=4)
 
             leaderboard.append({
@@ -208,35 +228,33 @@ def evaluation_page():
                 "Percentage": round(percentage, 2)
             })
 
-        st.success("✅ Evaluation Completed!")
         df = pd.DataFrame(leaderboard).sort_values(by="Percentage", ascending=False).reset_index(drop=True)
+        st.success("✅ Evaluation Complete!")
         st.dataframe(df)
 
         if st.button("⬇️ Download All Evaluation Reports (ZIP)"):
-            zip_path = "evaluation_reports.zip"
-            with ZipFile(zip_path, 'w') as zipf:
-                for root, dirs, files in os.walk(EVALUATION_DIR):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        zipf.write(file_path, os.path.relpath(file_path, EVALUATION_DIR))
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
+                with ZipFile(tmp_zip.name, 'w') as zipf:
+                    for root, _, files in os.walk(EVALUATION_DIR):
+                        for file in files:
+                            file_path = os.path.join(root, file)
+                            zipf.write(file_path, os.path.relpath(file_path, EVALUATION_DIR))
+                with open(tmp_zip.name, "rb") as f:
+                    st.download_button("Download ZIP", f, file_name="evaluation_reports.zip", mime="application/zip")
 
-            with open(zip_path, "rb") as f:
-                st.download_button("Download ZIP", f, file_name="evaluation_reports.zip", mime="application/zip")
-            os.remove(zip_path)
-
-
-# --- Download Reports Page (Protected) ---
+# -----------------------------
+# Download Reports (Protected)
+# -----------------------------
 def download_page():
-    st.title("📥 Download Reports")
+    st.title("📥 Download Student Reports")
     password_input = st.text_input("Enter Evaluator Password", type="password")
-
     if password_input != PASSWORD:
-        st.error("❌ Incorrect password. Access denied.")
+        st.error("❌ Incorrect password.")
         return
 
     evaluation_files = [f for f in os.listdir(EVALUATION_DIR) if f.endswith(".json")]
     if not evaluation_files:
-        st.warning("⚠️ No evaluations available.")
+        st.warning("⚠️ No evaluation reports found.")
         return
 
     leaderboard = []
@@ -252,29 +270,28 @@ def download_page():
     df = pd.DataFrame(leaderboard).sort_values(by="Percentage", ascending=False).reset_index(drop=True)
     st.dataframe(df)
 
-    selected = st.selectbox("Select student", df["Name"])
-    selected_file = next((f for f in evaluation_files if selected in f), None)
-
-    if selected_file:
-        with open(os.path.join(EVALUATION_DIR, selected_file), "r") as f:
+    selected_name = st.selectbox("Select student", df["Name"])
+    for file in evaluation_files:
+        with open(os.path.join(EVALUATION_DIR, file), "r") as f:
             data = json.load(f)
-        pdf_buffer = generate_pdf_report(data, data["responses"])
-        st.download_button("Download PDF", pdf_buffer, file_name=f"report_{selected}.pdf", mime="application/pdf")
+            if data["name"] == selected_name:
+                pdf = generate_pdf_report(data, data["evaluations"])
+                st.download_button("Download PDF Report", pdf, file_name=f"report_{selected_name}.pdf", mime="application/pdf")
+                break
 
-    if st.button("⬇️ Download All Reports (ZIP)"):
-        zip_path = "evaluation_reports.zip"
-        with ZipFile(zip_path, 'w') as zipf:
-            for root, dirs, files in os.walk(EVALUATION_DIR):
-                for file in files:
-                    file_path = os.path.join(root, file)
-                    zipf.write(file_path, os.path.relpath(file_path, EVALUATION_DIR))
+    if st.button("⬇️ Download All Evaluation Reports (ZIP)"):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
+            with ZipFile(tmp_zip.name, 'w') as zipf:
+                for root, _, files in os.walk(EVALUATION_DIR):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, EVALUATION_DIR))
+            with open(tmp_zip.name, "rb") as f:
+                st.download_button("Download ZIP", f, file_name="evaluation_reports.zip", mime="application/zip")
 
-        with open(zip_path, "rb") as f:
-            st.download_button("Download All Reports (ZIP)", f, file_name="evaluation_reports.zip", mime="application/zip")
-        os.remove(zip_path)
-
-
-# --- Main ---
+# -----------------------------
+# Main Navigation
+# -----------------------------
 def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Select Page", [
@@ -292,7 +309,6 @@ def main():
         evaluation_page()
     elif page == "Download Reports":
         download_page()
-
 
 if __name__ == "__main__":
     main()
