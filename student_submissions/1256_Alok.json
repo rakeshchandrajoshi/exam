@@ -1,0 +1,29 @@
+{
+    "name": "Alok",
+    "roll_number": "1256",
+    "course": "Btech",
+    "section": "6",
+    "submission_time": "2025-05-02 10:28:00",
+    "responses": [
+        {
+            "question": "1. Define Artificial Intelligence.",
+            "answer": "It is a new science which is trending"
+        },
+        {
+            "question": "2. What is Machine Learning?",
+            "answer": "It is less than deep learning. Which mimics human mind"
+        },
+        {
+            "question": "3. Explain Deep Learning.",
+            "answer": "It is advanced technique "
+        },
+        {
+            "question": "4. Applications of AI in daily life.",
+            "answer": "Very useful"
+        },
+        {
+            "question": "5. Difference between Supervised and Unsupervised Learning.",
+            "answer": "It includes lables while unsupervised do not include lables"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "name": "Rakesh",
+    "roll_number": "123",
+    "course": "Btech",
+    "section": "123",
+    "submission_time": "2025-05-02 11:23:07",
+    "responses": [
+        {
+            "question": "What is artificial Intelligence?",
+            "answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans,"
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans,"
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "answer": "Artificial intelligence is the ability of a computer or computer-controlled"
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks that are commonly associated with the intellectual processes characteristic of humans,"
+        },
+        {
+            "question": "What is artificial Intelligence?",
+            "answer": "Artificial intelligence is the ability of a computer or computer-controlled robot to perform tasks "
+        }
+    ]
+}
