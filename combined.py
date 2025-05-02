@@ -166,7 +166,7 @@ def generate_pdf_report(student_data, evaluations):
 # --- Evaluation Page ---
 def evaluation_page():
     st.title("🎯 Evaluator Dashboard - AI Assignment Evaluator")
-    groq_key = st.text_input("Enter Groq API Key", type="password")
+    groq_key = st.text_input("Enter Evaluator AI Password", type="password")
 
     submission_files = [f for f in os.listdir(SUBMISSION_DIR) if f.endswith(".json")]
     if len(submission_files) == 0:
