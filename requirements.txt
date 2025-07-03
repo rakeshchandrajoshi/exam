@@ -1,0 +1,2 @@
+reportlab
+langchain_groq
