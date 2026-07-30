@@ -16,7 +16,7 @@ PASSWORD = "Amity@123"
 SUBMISSION_DIR = "student_submissions"
 QUESTION_DIR = "question_paper"
 EVALUATION_DIR = "evaluation_reports"
-MODEL_NAME = "llama-3.3-70b-versatile""
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 os.makedirs(SUBMISSION_DIR, exist_ok=True)
 os.makedirs(QUESTION_DIR, exist_ok=True)
@@ -312,4 +312,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
